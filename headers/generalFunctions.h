@@ -5,7 +5,7 @@
 #include "./node.h"
 
 FILE* openFile(char*);
-int getNext(FILE*, Node_t, Node_t);
+int getNext(FILE*, uint32_t*);
 void closeFile(FILE*);
 void quickSort(Node_t*, int, int);
 int partition(Node_t*, int, int);

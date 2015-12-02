@@ -24,35 +24,30 @@ int main(int argc, char* argv[]) {
 	hashTable_t ht;
 	initHashTable(&ht);
 
-	Node_t nodeA, nodeB;
-	initNode(&nodeA, 0);
-	initNode(&nodeB, 0);
+	uint32_t idA, idB;
 
-	while (getNext(fptr, nodeA, nodeB) > 0) {
-		Node_t look = lookUp(ht, getNodeId(nodeA));
-		if (look == NULL) 
-			insert(ht, nodeA);
-		else {
-			deleteNode(nodeA);
-			free(nodeA);
-		}
-
-		look = lookUp(ht, getNodeId(nodeB));
-		if (look == NULL)
-			insert(ht, nodeB);
-		else {
-			deleteNode(nodeB);
-			free(nodeB);
-		}
-			
-		initNode(&nodeA, 0);
-		initNode(&nodeB, 0);
-	}
+	for (; ;) {
+		idA = idB = 0;
+		getNext(fptr, &idA);
+		getNext(fptr, &idB);
+		
+		if (!idA || !idB)
+			break;
 	
-	deleteNode(nodeA);
-	free(nodeA);
-	deleteNode(nodeB);
-	free(nodeB);
+		Node_t nodeA, nodeB;
+		nodeA = lookUp(ht, idA);
+		nodeB = lookUp(ht, idB);
+		
+		if (nodeA == NULL) {
+			initNode(&nodeA, idA);
+			insert(ht, nodeA);
+		}
+		if (nodeB == NULL) {
+			initNode(&nodeB, idB);
+			insert(ht, nodeB);
+		}
+		addFollow(nodeA, nodeB);
+	}
 
 	printHashTable(ht);
 	deleteHashTable(&ht);

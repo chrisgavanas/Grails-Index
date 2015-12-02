@@ -12,6 +12,7 @@ void setBucketMaxCap(Bucket_t, int);
 Node_t* getNode(Bucket_t);
 int haveSpace(Bucket_t);
 int insertNode(Bucket_t, Node_t);
+int insertNodeSorted(Bucket_t, Node_t);
 Node_t lookUpNode(Bucket_t, uint32_t);
 void doubleNodes(Bucket_t);
 Node_t getLastNode(Bucket_t);

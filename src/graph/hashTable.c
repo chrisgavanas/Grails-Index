@@ -40,9 +40,9 @@ void splitBucket(hashTable_t ht) {
 
 	initBucket(&(ht->buckets[ht->pointer]));
 	while ((toAdd = getLastNode(oldBucket)) != NULL) {
-		if (!insertNode(ht->buckets[hashFunction(ht->round + 1, getNodeId(toAdd), ht->tableSize)], toAdd)) {
+		if (!insertNodeSorted(ht->buckets[hashFunction(ht->round + 1, getNodeId(toAdd), ht->tableSize)], toAdd)) {
 			doubleNodes(ht->buckets[hashFunction(ht->round + 1, getNodeId(toAdd), ht->tableSize)]);
-			insertNode(ht->buckets[hashFunction(ht->round + 1, getNodeId(toAdd), ht->tableSize)], toAdd);
+			insertNodeSorted(ht->buckets[hashFunction(ht->round + 1, getNodeId(toAdd), ht->tableSize)], toAdd);
 		}
 	}
 
@@ -54,10 +54,10 @@ void insert(hashTable_t ht, Node_t node) {
 	int toBePlaced = hashFunction(ht->round, getNodeId(node), ht->tableSize) >= ht->pointer ? hashFunction(ht->round, getNodeId(node), ht->tableSize) : hashFunction(ht->round + 1, getNodeId(node), ht->tableSize);
 
 	if (haveSpace((ht->buckets)[toBePlaced]))
-		insertNode((ht->buckets)[toBePlaced], node);
+		insertNodeSorted((ht->buckets)[toBePlaced], node);
 	else {
 		doubleNodes(ht->buckets[toBePlaced]);
-		insertNode((ht->buckets)[toBePlaced], node);
+		insertNodeSorted((ht->buckets)[toBePlaced], node);
 		ht->realTableSize += 1;
 		increaseHashTable(ht);
 		splitBucket(ht);

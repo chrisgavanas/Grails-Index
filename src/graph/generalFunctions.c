@@ -16,14 +16,8 @@ FILE* openFile(char* path) {
 	return rv;
 }
 
-int getNext(FILE* fptr, Node_t nodeA, Node_t nodeB) {
-	uint32_t node1, node2;
-	int rv = fscanf(fptr, "%u %u\n", &node1, &node2) < 2 ? -1 : 1;
-	
-	setNodeId(nodeA, node1);
-	setNodeId(nodeB, node2);
-
-	return rv;
+int getNext(FILE* fptr, uint32_t* id) {
+	return fscanf(fptr, "%u", id) == 1;
 }
 
 void closeFile(FILE* fptr) {
@@ -65,25 +59,19 @@ void swap(Node_t* from, Node_t* to) {
 	*to = temp;
 }
 
-Node_t binarySearch(Node_t* array, int dim, uint32_t id) {
-	if (dim < 0)
-		return NULL;
+Node_t binarySearch(Node_t* array, int to, uint32_t id) {
+	int from = 0;
+	
+	while (from <= to) {
+		int mid = from + (to - from) / 2;
 		
-	while (array[dim] == NULL) {
-		if (dim == 0)
-			return NULL;
-		dim--;
-	}
-	int first = 0, middle = dim / 2;
-
-	while (first <= dim) {
-		if (getNodeId(array[middle]) < id)
-			first = middle + 1;
-		else if (getNodeId(array[middle]) == id)
-			return array[middle];
+		if (getNodeId(array[mid]) > id)
+			to = mid - 1;
+		else if (getNodeId(array[mid]) < id)
+			from = mid + 1; 
 		else
-			dim = middle - 1;
-		middle = (first + dim) / 2;
+			return array[mid];
 	}
+	
 	return NULL;
 }

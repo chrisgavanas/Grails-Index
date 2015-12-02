@@ -38,10 +38,13 @@ Edge_t getEdges(Node_t node) {
 }
 
 void deleteNode(Node_t node) {
-	Edge_t edge;
+	Edge_t edge = node->edges;
 	
-	while ((edge = getNextEdge(node->edges)) != NULL)
+	while (edge != NULL) {
+		Edge_t temp = getNextEdge(edge);
 		free(edge);
+		edge = temp;
+	}
 }
 
 /*	Used for debugging	*/

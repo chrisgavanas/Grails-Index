@@ -56,6 +56,30 @@ int insertNode(Bucket_t bucket, Node_t node) {
 	}
 }
 
+int insertNodeSorted(Bucket_t bucket, Node_t node) {
+	int i;
+	
+	if (bucket->bucketNo == bucket->maxCapacity)
+		return 0;
+		
+	bucket->bucketNo++;
+	for (i = 0; i < bucket->maxCapacity; i++) {
+		if (bucket->node[i] == NULL) {
+			bucket->node[i] = node;
+			break;
+		}
+		if (getNodeId(bucket->node[i]) <= getNodeId(node))
+			continue;
+		else {
+			Node_t temp = bucket->node[i];
+			bucket->node[i] = node;
+			node = temp;
+		}
+	}
+
+	return 1;
+}
+
 Node_t lookUpNode(Bucket_t bucket, uint32_t id) {
 	return binarySearch(bucket->node, bucket->bucketNo - 1, id);
 }
