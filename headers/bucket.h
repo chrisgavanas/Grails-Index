@@ -9,7 +9,7 @@ int getBucketNo(Bucket_t);
 void setBucketNo(Bucket_t, int);
 int getBucketMaxCap(Bucket_t);
 void setBucketMaxCap(Bucket_t, int);
-Node_t* getNode(Bucket_t);
+Node_t* getNodes(Bucket_t);
 int haveSpace(Bucket_t);
 int insertNode(Bucket_t, Node_t);
 int insertNodeSorted(Bucket_t, Node_t);

@@ -3,25 +3,26 @@
 #include <stdint.h>
 
 #include "./../../headers/edge.h"
+#include "./../../headers/node.h"
 
 struct Edge {
-	uint32_t nodeId;
+	Node_t node;
 	Edge_t next;
 };
 
-void initEdge(Edge_t* edge, uint32_t nodeId) {
+void initEdge(Edge_t* edge, Node_t node) {
 	*edge = malloc(sizeof(struct Edge));
 	
-	(*edge)->nodeId = nodeId;
+	(*edge)->node = node;
 	(*edge)->next = NULL;
 }
 
-uint32_t getId(Edge_t edge) { 
-	return edge->nodeId;
+Node_t getNode(Edge_t edge) { 
+	return edge->node;
 }
 
-void setId(Edge_t edge, uint32_t nodeId) {
-	edge->nodeId = nodeId;
+void setNode(Edge_t edge, Node_t node) {
+	edge->node = node;
 }
 
 Edge_t getNextEdge(Edge_t edge) {

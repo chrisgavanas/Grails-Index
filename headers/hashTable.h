@@ -14,4 +14,7 @@ void insert(hashTable_t, Node_t);
 Node_t lookUp(hashTable_t, uint32_t);
 void sort(hashTable_t);
 void deleteHashTable(hashTable_t*);
+void buildGrailIndex(hashTable_t, int);
+void freeVisitedNodes(hashTable_t);
+int reachability(hashTable_t, uint32_t, uint32_t);
 void printHashTable(hashTable_t);

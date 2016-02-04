@@ -5,8 +5,14 @@
 #include "./../../headers/generalParams.h"
 #include "./../../headers/generalFunctions.h"
 #include "./../../headers/errors.h"
+#include "./../../headers/hashTable.h"
 #include "./../../headers/node.h"
 
+
+struct threadArgs {
+	hashTable_t ht;
+	int thread;
+};
 
 FILE* openFile(char* path) {
 	FILE* rv = fopen(path, FILEMODE);
@@ -74,4 +80,22 @@ Node_t binarySearch(Node_t* array, int to, uint32_t id) {
 	}
 	
 	return NULL;
+}
+
+void initArgs(args_t* args, hashTable_t ht, int thread) {
+	*args = malloc(sizeof(struct threadArgs));
+	(*args)->ht = ht;
+	(*args)->thread = thread;
+}
+
+
+void destroyArgs(args_t* args) {
+	free(*args);
+	*args = NULL;
+}
+
+void* startThread(void* args) {
+//	srand((unsigned int) pthread_self());
+	buildGrailIndex(((args_t)args)->ht, ((args_t)args)->thread);
+	free(args);
 }

@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
 
 #include "./../../headers/generalParams.h"
 #include "./../../headers/generalFunctions.h"
@@ -7,6 +9,7 @@
 #include "./../../headers/hashTable.h"
 #include "./../../headers/node.h"
 
+//#include <sys/resource.h>
 
 int main(int argc, char* argv[]) {
 	if (argc < 2) {
@@ -14,6 +17,11 @@ int main(int argc, char* argv[]) {
 		return -1;
 	}
 	char* PATH = argv[1];
+	
+//	struct rlimit rl;
+//	getrlimit(RLIMIT_STACK, &rl);
+//	rl.rlim_cur = 64L * 1024L * 1024L;
+
 	
 	FILE* fptr = openFile(PATH);
 	if (fptr == NULL) {
@@ -48,11 +56,29 @@ int main(int argc, char* argv[]) {
 		}
 		addFollow(nodeA, nodeB);
 	}
-
-	printHashTable(ht);
-	deleteHashTable(&ht);
+	srand((unsigned int) time(NULL));
 	
+	int i;
+	extern int* currRank;
+	currRank = malloc(sizeof(int) * LABEL_LEVEL);
+	memset(currRank, 0, sizeof(int) * LABEL_LEVEL);
+	pthread_t threads[5];
+	for (i = 0; i < LABEL_LEVEL; i++) {
+		args_t args;
+		initArgs(&args, ht, i);
+		pthread_create(&threads[i], NULL, startThread, (void*) args);
+	}
+	for (i = 0; i < LABEL_LEVEL; i++) 
+		pthread_join(threads[i], NULL);	
+	
+	freeVisitedNodes(ht);	
+		
+	reachability(ht, 1, 10);
+	
+	
+	deleteHashTable(&ht);
 	closeFile(fptr);
+	free(currRank);
 
 	return 0;
 }

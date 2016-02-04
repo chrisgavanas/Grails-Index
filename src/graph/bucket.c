@@ -39,7 +39,7 @@ void setBucketMaxCap(Bucket_t bucket, int maxCapacity) {
 	bucket->maxCapacity = maxCapacity;
 }
 
-Node_t* getNode(Bucket_t bucket) {
+Node_t* getNodes(Bucket_t bucket) {
 	return bucket->node;
 }
 

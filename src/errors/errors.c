@@ -10,5 +10,9 @@ char* getError() {
 		return "INVALID ARGUMENTS";
 	case INVALID_PATH:
 		return "NO DATASET FOUND";	
+	case NODE_FROM_NOT_FOUND:
+		return "\"FROM\" NODE NOT FOUND";
+	case NODE_TO_NOT_FOUND:
+		return "\"TO\" NODE NOT FOUND";
 	}
 }

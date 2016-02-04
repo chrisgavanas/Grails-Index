@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+
 #include "./../../headers/hashTable.h"
 #include "./../../headers/bucket.h"
+#include "./../../headers/label.h"
 #include "./../../headers/generalParams.h"
+#include "./../../headers/errors.h"
 
 struct hashTable {
 	int tableSize;
@@ -93,6 +96,76 @@ void deleteHashTable(hashTable_t* ht) {
 	free((*ht)->buckets);
 	free(*ht);
 	*ht = NULL;
+}
+
+void buildGrailIndex(hashTable_t ht, int thread) {
+	int i, j;
+	
+	for (i = 0; i < ht->realTableSize; i++) {
+		Node_t* nodes = getNodes(ht->buckets[i]);
+		int noNodes = getBucketNo(ht->buckets[i]);
+		
+		for (j = 0; j < noNodes; j++) {
+			Node_t node = nodes[j];
+			
+			if (getVisited(node, thread) == 1)
+				continue;
+			else
+				fixLabels(node, thread);
+		}
+	}
+}
+
+int reachability(hashTable_t ht, uint32_t from, uint32_t to) {
+	int i;
+	Node_t a = lookUp(ht, from);
+	Node_t b = lookUp(ht, to);
+
+	if (a == NULL) {
+		setError(NODE_FROM_NOT_FOUND);
+		return -1;
+	}
+	if (b == NULL) {
+		setError(NODE_TO_NOT_FOUND);
+		return -1;
+	}
+
+	if (getNodeId(a) == getNodeId(b))
+		return 1;
+		
+	Label_t* labelsA = getLabels(a);
+	Label_t* labelsB = getLabels(b);
+	int canAnswer = 0;
+	
+	for (i = 0; i < LABEL_LEVEL && !canAnswer; i++)
+		if (!isSubset(labelsB[i], labelsA[i]))
+			canAnswer++;
+
+	if (canAnswer)
+		return 0;
+
+		
+	Edge_t edge = getEdges(a);
+	while (edge != NULL) {
+		if (reachability(ht, getNodeId(getNode(edge)), to))
+			return 1;
+			
+		edge = getNextEdge(edge);
+	}
+		
+	return 0;
+}
+
+void freeVisitedNodes(hashTable_t ht) {
+	int i, j;
+	
+	for (i = 0; i < ht->realTableSize; i++) {
+		Node_t* nodes = getNodes(ht->buckets[i]);
+		int noNodes = getBucketNo(ht->buckets[i]);
+		
+		for (j = 0; j < noNodes; j++)
+			freeVisited(nodes[j]);	
+	}
 }
 
 /*	Used for debugging	*/
