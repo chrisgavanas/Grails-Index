@@ -138,8 +138,10 @@ int reachability(hashTable_t ht, uint32_t from, uint32_t to) {
 	int canAnswer = 0;
 	
 	for (i = 0; i < LABEL_LEVEL && !canAnswer; i++)
-		if (!isSubset(labelsB[i], labelsA[i]))
+		if (!isSubset(labelsB[i], labelsA[i])) {
 			canAnswer++;
+			break;
+		}
 
 	if (canAnswer)
 		return 0;
