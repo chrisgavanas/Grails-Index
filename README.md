@@ -6,7 +6,7 @@ Implemented in C </br>
 Needs as an argument a file which contains a graph formatted as :</br>
 nodeId1 nodeId2</br>
 where relation exists between every couple.</br>
-You can set from generalParams.h file the labeling LABEL_LEVEL which is set 5 as a default value.</br>
+You can set from generalParams.h file the LABEL_LEVEL which is set to 5 as a default value.</br>
 Notice that higher value of LABEL_LEVEL results as faster queries but more space as well.</br>
 You can take a loot of the paper:</br>
   http://www.cs.rpi.edu/~zaki/PaperDir/VLDB10.pdf</br>
